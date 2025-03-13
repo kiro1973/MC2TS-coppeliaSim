@@ -26,7 +26,7 @@ This project simulates the movement of a drone between predefined points while a
 
 2. or Specify the moves and areas where wind effects will be present:
     ```python
-    # here we are pretending the areas of wind exist during all the moves , you can define yous 
+    # here we are pretending the areas of wind exist during all the moves , you can define yours 
 wind_regions = [
     {'center': (2, 3), 'radius': 3.0, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]},
     {'center': (8, 7), 'radius': 2.5, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}
