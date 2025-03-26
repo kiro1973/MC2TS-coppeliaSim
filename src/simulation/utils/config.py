@@ -36,7 +36,7 @@ points = {
 critical_sensors = {key: value for key, value in points.items() if value.get("c") == True}
 non_critical_sensors = {key: value for key, value in points.items() if value.get("c") == False}
 
-init_energy = 80
+init_energy = 100
 # Different coefficients according to the algorithm used 
 coef_energy_no_wind_max = 2 
 coef_energy_wind_max = 3
@@ -49,11 +49,6 @@ reward_non_critical_sensors = 1
 
 replanning_freq = 3 #Décide les n prochains capteurs à visiter (refait le calcul de décision tous les n !)
 nber_of_rollout_iterations = 500
-
-
-
-#Pour moi infinie...
-simulation_depth = 4 #Profondeur de simulation : on simule les 4 prochains capteurs afin de calculer la distance totale qui sera parcourue ! 
 
 
 # Moves where wind is present
