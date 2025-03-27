@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHB
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from simulation.utils.config import *
+import os
 class EnergyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -22,7 +23,9 @@ class EnergyWindow(QMainWindow):
         energy_layout = QHBoxLayout(energy_header)
         
         battery_label = QLabel()
-        battery_pixmap = QPixmap("battery.png").scaled(40, 40, Qt.KeepAspectRatio)
+        image_path = os.path.abspath("src/simulation/img/battery.png")
+        print(f"Loading image from: {image_path}")
+        battery_pixmap = QPixmap(image_path).scaled(40, 40, Qt.KeepAspectRatio)
         battery_label.setPixmap(battery_pixmap)
         energy_layout.addWidget(battery_label)
         

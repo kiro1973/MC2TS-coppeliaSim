@@ -26,7 +26,7 @@ class DroneController:
         self.monitor.start()
         
     def plot_in_main_thread(self, points_data, visited_sensors, deleted_sensors, is_HI_Mode_list):
-        plot_capteurs_points(points_data, visited_sensors, deleted_sensors, is_HI_Mode_list)
+        self.plot_capteurs_points(points_data, visited_sensors, deleted_sensors, is_HI_Mode_list)
     def plot_capteurs_points(self,points, real_visited_sensors, deleted_sensors, is_HI_Mode_list):
         plt.clf()
         plt.gcf().set_size_inches(10, 8) 
