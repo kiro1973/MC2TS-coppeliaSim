@@ -7,11 +7,15 @@ This project simulates the movement of a drone between predefined points while a
 - Calculates energy consumption for each move.
 - Adds wind effects to certain areas , influencing the drone's performance.
 
+## Launch algorithm and simulation
+1. cd src
+2. launch my_Node.py (main code)
+
 ## Setup Instructions
-1. go to the `my_NodeImplementation_2.py` --> this file and the MCTS contain the algortihm controlling the drone 
+1. go to the `my_Node.py` --> this file and the MCTS contain the algortihm controlling the drone 
 2. and in the line `controller.run_algorithm(do_drone_navigation)` in the main you can change the method used for drone navigation by another one you prefer but have a look first of how it functions
 3. the main 2 functions called in the function `do_drone_navigation` to interact with the drone simulation module is the `move_drone_to_sensor` and `get_consumed_energy`
-
+4. the config file contains all the configurations to be chosen by the final user such as initial energy of the drone, size and time of apparition of wind area, factor of energy consumption per meter with wind and without, coordinates and criticity of sensors and base in the map...
 ## Usage
 1. You can define your own parameters in the config file like 
     ```python
@@ -26,11 +30,11 @@ This project simulates the movement of a drone between predefined points while a
 
 2. or Specify the moves and areas where wind effects will be present:
     ```python
-    # here we are pretending the areas of wind exist during all the moves , you can define yous 
-wind_regions = [
-    {'center': (2, 3), 'radius': 3.0, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]},
-    {'center': (8, 7), 'radius': 2.5, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}
-                ]
+    # Here we are pretending the areas of wind exist during all the moves. You can define yours.
+    wind_regions = [
+        {'center': (2, 3), 'radius': 3.0, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]},
+        {'center': (8, 7), 'radius': 2.5, 'moves': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}
+    ]
     ```
 
 3. In your controller you instantiate an object from the class  `DroneSimulation` class with the defined parameters:

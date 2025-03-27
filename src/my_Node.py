@@ -10,7 +10,6 @@ from PyQt5.QtCore import QObject, pyqtSignal
 import threading
 import time
 from controller import DroneController
-# Configure matplotlib to use Qt5 backend
 import matplotlib
 matplotlib.use('Qt5Agg')
 
@@ -20,7 +19,6 @@ is_HI_Mode = False
 
 class Node(Node):
     next_node_id = 0
-    #Test2
 
     def __init__(self, sensor, parent, terminal):
         self.id = Node.next_node_id
@@ -31,18 +29,12 @@ class Node(Node):
         self.accumulated_cost_mode_LO = 0 
         self.accumulated_cost_mode_HI = 0
         self.compute_accumulated_cost()
-        #print(f"Node Created: ID={self.id}, Sensor={self.sensor}, Parent={self.parent.sensor if self.parent else None}, Terminal={self.terminal}")
 
     def compute_accumulated_cost(self):
         if (self.parent == None):
             self.accumulated_cost_mode_LO = 0 
             self.accumulated_cost_mode_HI = 0 
         else:
-            """real_parent = self.parent 
-            while (real_parent.deleted == True):
-                real_parent = real_parent.parent
-            """     
-            #dist_from_parent_to_current_node = calculate_distance(points[self.parent.sensor], points[self.sensor])
             dist_from_parent_to_current_node = calculate_distance(points[self.parent.sensor], points[self.sensor])
             self.accumulated_cost_mode_LO = self.parent.accumulated_cost_mode_LO + coef_energy_no_wind_max*dist_from_parent_to_current_node
             
@@ -64,9 +56,6 @@ class Node(Node):
                 self.accumulated_cost_mode_HI = worst_accumulated_cost + coef_energy_wind_max*dist_from_previous_node_with_worst_accumulated_cost
             else:
                 self.accumulated_cost_mode_HI = self.parent.accumulated_cost_mode_LO + coef_energy_wind_max*dist_from_parent_to_current_node
-
-        #print("accumulated_cost_mode_HI", self.id, " : ", self.sensor, " : ", self.accumulated_cost_mode_HI)
-        #print("accumulated_cost_mode_LO", self.id, " : ", self.sensor, " : ", self.accumulated_cost_mode_LO)
 
     def find_children(self):
         if self.terminal:
@@ -137,9 +126,6 @@ class Node(Node):
             return reward
     
     def choose_next_sensor(self, sensor):
-        #print(is_HI_Mode)
-        #dist_next_to_base = calculate_distance(points[sensor], points["B"])
-        #dist_to_next = calculate_distance(points[self.sensor], points[sensor])
 
         temp_node = Node(sensor = sensor, parent = self, terminal = False)
         temp_child = Node(sensor="B", parent=temp_node, terminal = True)
@@ -147,7 +133,6 @@ class Node(Node):
         #Gestion du cas où on a visité tous les capteurs 
         if (sensor == "B"): 
             return Node(sensor = sensor, parent = self, terminal = True)
-        #elif ((self.accumulated_cost_mode_HI + coef_energy_wind*(dist_to_next+dist_next_to_base) >= init_energy and is_HI_Mode == True)  or (self.accumulated_cost_mode_LO + coef_energy_no_wind*(dist_to_next+dist_next_to_base) >= init_energy  and is_HI_Mode == False)):      
         
         #Dans le cas où il n'y a jamais de vent on parcourt la sequence entière ! 
         #Si on met la condition d'arrêt de la sequence avec HI, on optimise pas du tt l'énergy du drone... (il reste plein d'énergy à la fin...)
@@ -157,13 +142,7 @@ class Node(Node):
             return temp_node
         else : 
             return Node(sensor = "B", parent = self, terminal = True)
-        
-        """elif (self.accumulated_cost_mode_HI + coef_energy_wind_max*(dist_to_next+dist_next_to_base) >= init_energy): 
-        #elif (self.accumulated_cost_mode_HI + coef_energy_wind*(dist_to_next+dist_next_to_base) >= init_energy ): 
-            return Node(sensor="B", parent=self, terminal=True)
-        else:
-            return Node(sensor=sensor, parent=self, terminal=False)
-        """
+
 
 def calculate_distance(capteur1, capteur2):
     x1, y1 = capteur1['x'], capteur1['y']
@@ -223,15 +202,7 @@ def do_drone_navigation(simulation, plot_signals):
         visited_sensors.append(node.sensor)
         sensors_since_last_replanning += 1
 
-        """dist_next_to_base = calculate_distance(points[node.sensor], points["B"])
-        dist_to_next = calculate_distance(points[node.parent.sensor], points[node.sensor])
-        print("check node parent",node.parent.sensor)
-        check = node.parent.accumulated_cost_mode_HI + coef_energy_wind*(dist_to_next+dist_next_to_base)
-        print("check_stop_cond",check, node.sensor)
-        """
-
         #Déplacement ou delete en fonction du mode du current node
-        
         if (is_HI_Mode):
             if(points[node.sensor]["c"] == True):
                 simulation.move_drone_to_sensor(node.sensor, is_HI_Mode, node.accumulated_cost_mode_HI, node.accumulated_cost_mode_LO)
@@ -246,22 +217,13 @@ def do_drone_navigation(simulation, plot_signals):
                     is_HI_Mode = True
                 else : 
                     is_HI_Mode = False
-
-
             else :
                 deleted_sensors.append(node.sensor)
-                #Modif online dans le cas node deleted ????
-                """node.deleted = True
-                node.accumulated_cost_mode_HI = node.parent.accumulated_cost_mode_HI
-                node.accumulated_cost_mode_LO = node.parent.accumulated_cost_mode_LO
-                """
 
         else:
             simulation.move_drone_to_sensor(node.sensor, is_HI_Mode, node.accumulated_cost_mode_HI, node.accumulated_cost_mode_LO)
             real_visited_sensors.append(node.sensor)
             is_HI_Mode_list.append(is_HI_Mode)
-            #Mise à jour accumulated cost (cause deleted node) !! FAUX ???????????
-            #node.compute_accumulated_cost() 
             
             #Mise à jour du mode
             real_energy_consumed = simulation.get_consumed_energy()
@@ -276,13 +238,11 @@ def do_drone_navigation(simulation, plot_signals):
     #PRINT
     dist_to_go = calculate_distance(points[node.parent.sensor], points[node.sensor])
     print("dist_from_parent_to_current",dist_to_go)
-    #dist = calculate_accumulated_distance_drone(node)
     print(f"Capteurs visités : {visited_sensors}")
     print(f"Capteurs visités (réel): {real_visited_sensors}")
     print(f"Deleted sensor :  {deleted_sensors}")
     print("energy_consumed_LO", node.accumulated_cost_mode_LO, node.sensor)
     print("energy_consumed_HI", node.accumulated_cost_mode_HI, node.sensor)
-    #print("accumulated_dist", dist)
     print("real_energy_consumed", real_energy_consumed)
     print("is_HI_Mode", is_HI_Mode)
 

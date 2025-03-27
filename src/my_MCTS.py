@@ -3,8 +3,6 @@ from collections import defaultdict
 import math
 
 
-
-
 class MCTS:
     "Monte Carlo tree searcher. First rollout the tree then choose a move."
     #Attributes at TREE level
@@ -15,7 +13,7 @@ class MCTS:
         self.exploration_weight = exploration_weight
 
     def choose(self, node):
-        "Choose the best successor of node. (Choose a move in the game)"
+        "Choose the best successor of node. (Choose the next sensor to visit)"
         if node.is_terminal():
             raise RuntimeError(f"choose called on terminal node {node}")
 
@@ -60,49 +58,13 @@ class MCTS:
         if node in self.children:
             return  # already expanded
         self.children[node] = node.find_children()
-        #print(f"Node {node.sensor} expanded. Number of children: {len(self.children[node])}.") #ok B is well expanded ! Have 20 children 
-        
-       
 
-    # def _simulate(self, node):
-    #     "Returns the reward for a random simulation (to completion) of `node`"
-    #     invert_reward = True
-    #     while True:
-    #         if node.is_terminal():
-    #             reward = node.reward()
-    #             return 1 - reward if invert_reward else reward
-    #         node = node.find_random_child()
-    #         invert_reward = not invert_reward
-
-#Test all paths !!
-        """    
-        def _simulate(self, node): #Pour mon drône (but minimiser la distance, reward = -distance => maximiser le reward)
-            
-            if node.is_terminal():
-                reward = node.reward()
-                return reward
-            #node = node.find_random_child() #Condition plus smart que random ? Distance la plus proche ? 
-
-            all_children = node.find_children()
-            best_reward = float('-inf')
-            best_node = None
-            
-            for child in all_children:
-                reward = self._simulate(child)  # Simuler chaque enfant
-                if reward > best_reward:
-                    best_reward = reward
-                    best_node = child
-            
-            return best_reward
-
-        """
     def _simulate(self, node): #Pour mon drône (but minimiser la distance, reward = -distance => maximiser le reward)
         while True :
             if node.is_terminal():
                 reward = node.reward()
                 #print("reward",reward)
                 return reward
-            #node = node.find_random_child() #Condition plus smart que random ? Distance la plus proche ? 
             node = node.find_closer_child()
 
 
